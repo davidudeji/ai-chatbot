@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI CHATBOT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="chatbot-popup">
+  <!-- Chatbot Header -->
+  <div class="chat-header">
+    <div class="header-info">
+      <img src="./images/chatbot.png" alt="chatbot-image" width="50px" height="50px" class="chatbot-logo">
+       <h2 class="logo-text">Chatbot</h2>
+    </div>
+  
+ 
+   <button class="material-symbols-rounded" id="close-chatbot">keyboard_arrow_down</button>
+  </div>
+
+<div>
+
+<!-- Chatbot Body -->
+<div class="chat-body">
+  <div class="message bot-message">
+     <img src="./images/chatbot.png" alt="chatbot-image" width="50px" height="50px" class="bot-avatar">
+    <div class="message-text">
+      <p>
+        Hey there 👋 <br> How can I help you today? <br>
+      </p>
+    </div>
+  </div>
+
+  <!-- <div class="message user-message">
+     <div class="message-text">
+    
+     </div>
+  </div> -->
+<!-- 
+  <div class="message bot-message">
+     <img src="./images/chatbot.png" alt="chatbot-image" width="50px" height="50px" class="bot-avatar">
+    <div class="message-text">
+    <div class="thinking-indicator">
+      <div class="dot">.</div>
+      <div class="dot">.</div>
+      <div class="dot">.</div>
+    </div>
+    </div>
+  </div>
+</div>
+   -->
+
+ <!-- Chatbot Footer -->
+  <div class="chat-footer">
+    <form action="#" class="chat-form">
+      <textarea placeholder="Message..." class="message-input" required></textarea>
+      <div class="chat-controls">
+         <button class="material-symbols-rounded" type="button" >
+          sentiment_satisfied
+        </button>
+         <button class="material-symbols-rounded" type="button">attach_file</button>
+         <button class="material-symbols-rounded" type="submit" id="send-message">arrow_upward</button>
+      </div>
+    </form>
+  </div>
+ 
+</div>
+<!-- 
+<div class="search-wrapper">
+  <input type="text" id="promptInput" placeholder="Describe what you want..." />
+  <button id="generateBtn">Generate</button>
+</div>
+
+<div id="resultContainer"></div> -->
+<script src="script.js"></script>
+</body>
+</html>
