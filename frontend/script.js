@@ -42,6 +42,11 @@ const messageElement = incomingMessageDiv.querySelector(".message-text")
     } catch(error){
       console.error(error.message);
     }
+    finally{
+        incomingMessageDiv.classList.remove("thinking");
+        chatBody.scrollTo({top: chatBody.scrollHeight, behaviour: "smooth"});
+
+    }
 }
 
 // Handle outgoing user message
@@ -57,6 +62,7 @@ const handleOutgoingMessage = (e) => {
     const outgoingMessageDiv = createMessageElement(messageContent, "user-message");
     outgoingMessageDiv.querySelector(".message-text").textContent = userData.message;
     chatBody.appendChild(outgoingMessageDiv);
+    chatBody.scrollTo({top: chatBody.scrollHeight, behaviour: "smooth"});
 
 
     // Simulate bot response with thinking indicator after a delay
@@ -75,6 +81,7 @@ const handleOutgoingMessage = (e) => {
     
     const incomingMessageDiv = createMessageElement(messageContent, "bot-message", "thinking");
     chatBody.appendChild(incomingMessageDiv);
+     chatBody.scrollTo({top: chatBody.scrollHeight, behaviour: "smooth"});
     generateBotResponse(incomingMessageDiv);
     }, 600)
 }
