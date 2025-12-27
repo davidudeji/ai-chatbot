@@ -65,6 +65,8 @@ app.post("/api/chat", async (req, res) => {
     console.error("🔥 SERVER CRASH:", err);
     res.status(500).json({ reply: "Internal server error" });
   }
+
+  
 });
 
 app.listen(PORT, () => {

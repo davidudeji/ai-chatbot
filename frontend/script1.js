@@ -30,6 +30,7 @@ const handleOutgoingMessage = async (e) => {
     "bot-message"
   );
   chatBody.appendChild(incomingMessageDiv);
+  chatBody.scrollTo({top: chatBody.scrollHeight, behavior:"smooth"});
 
   // Send message to backend
   const response = await fetch("http://localhost:3000/api/chat", {
@@ -40,6 +41,7 @@ const handleOutgoingMessage = async (e) => {
 
   const data = await response.json();
   incomingMessageDiv.querySelector(".message-text").textContent = data.reply;
+    chatBody.scrollTo({top: chatBody.scrollHeight, behavior:"smooth"});
 };
 
 messageInput.addEventListener("keydown", (e) => {
