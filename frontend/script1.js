@@ -24,43 +24,22 @@ const handleOutgoingMessage = async (e) => {
   );
   chatBody.appendChild(outgoingMessageDiv);
 
-  // Bot thinking message
+  // Bot thinking
   const incomingMessageDiv = createMessageElement(
     `<div class="message-text">Thinking...</div>`,
-    "bot-message",
-    "thinking"
+    "bot-message"
   );
   chatBody.appendChild(incomingMessageDiv);
 
-  try {
-    // Send message to backend
-    const response = await fetch("http://localhost:3000/api/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message })
-    });
+  // Send message to backend
+  const response = await fetch("http://localhost:3000/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message })
+  });
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.reply || "Something went wrong");
-    }
-
-    incomingMessageDiv.querySelector(".message-text").textContent = data.reply;
-
-  } catch (error) {
-    console.error(error);
-    incomingMessageDiv.querySelector(".message-text").textContent =
-      "⚠️ Error getting response";
-
-  } finally {
-    // ✅ Always run (success or error)
-    incomingMessageDiv.classList.remove("thinking");
-    chatBody.scrollTo({
-      top: chatBody.scrollHeight,
-      behavior: "smooth"
-    });
-  }
+  const data = await response.json();
+  incomingMessageDiv.querySelector(".message-text").textContent = data.reply;
 };
 
 messageInput.addEventListener("keydown", (e) => {
