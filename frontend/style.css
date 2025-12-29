@@ -144,7 +144,7 @@ padding: 2px 16px;
 .chat-body .user-message .attachment{
   width: 50%;
   margin-top: -7px;
-  border-radius: 13px;
+  border-radius: 13px 3px 13px 13px;
 }
 
 .chat-body .bot-message .thinking-indicator {
@@ -262,12 +262,40 @@ padding: 2px 16px;
     background: #f1f1ff;
    }
 
+.chat-form .file-upload-wrapper {
+  height: 60px;       
+  width: 60px;
+  position: relative;  
+  border-radius: 50%;
+  overflow: hidden;    
+  /* border: 1px solid #CCC; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  /* background: #F2F2FF; */
+}
+.chat-form .file-upload-wrapper img {
+  position: relative;  
+  display: none;      
+  width: 80%;
+  height: 80%;
+  object-fit: cover;    
+  border-radius: 50%;
+}
+
+
+.chat-form .file-upload-wrapper.file-uploaded img{
+  display: block;
+}
+
 .bot-message {
  border: none;
 }
 .chat-form{
   background: gray;
 }
+
 
 
 
