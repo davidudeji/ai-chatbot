@@ -30,8 +30,8 @@ const handleOutgoingMessage = async (e) => {
 
   // User message
   const outgoingMessageDiv = createMessageElement(
-    `<div class="message-text">${message}</div>`,
-    "user-message"
+    `<div class="message-text">${message}</div>
+ ${userData.file.data ? ` <img src="data:${userData.file.mime_type};base64,${userData.file.data}" class="attachment"/>` : ""}`, "user-message"
   );
   chatBody.appendChild(outgoingMessageDiv);
 
