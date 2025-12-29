@@ -1,97 +1,24 @@
-const chatBody = document.querySelector(".chat-body")
-const messageInput = document.querySelector(".message-input")
-const sendMessageButton = document.querySelector("#send-message")
+import { GoogleGenAI } from "@google/genai";
+import * as fs from 'fs';
 
-// Api setup
-const API_KEY = process.env.GEMINI_API_KEY;
-const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
+const ai = new GoogleGenAI({ apiKey: "GEMINI_API_KEY" });
 
-const userData = {
-    message: null
-}
-const createMessageElement = (content, ...classes) => {
-    const div = document.createElement("div");
-    div.classList.add("message", ...classes);
-    div.innerHTML = content;
-    return div;
-}
+async function main() {
+    const contents = [
+        { text: "Summarize this document" },
+        {
+            inlineData: {
+                mimeType: 'application/pdf',
+                data: Buffer.from(fs.readFileSync("content/343019_3_art_0_py4t4l_convrt.pdf")).toString("base64")
+            }
+        }
+    ];
 
-// Generate bot response using API
-const generateBotResponse =  async (incomingMessageDiv) => {
-
-const messageElement = incomingMessageDiv.querySelector(".message-text")
-    // API request options
-    const requestOptions = {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({
-        contents: [{parts: [{text:userData.message }],
-    },],}),
-    };
-
-    try{
-        const response = await fetch(API_URL, requestOptions);
-        const data  = await response.json(); 
-        if(!response.ok) throw new Error(data.error.message);
-
-
-       //  Extract and display bot's response text
-        const apiResponseText = data.candidates[0].content.parts[0].text.trim();
-        messageElement.innerText = apiResponseText;
-    } catch(error){
-      console.error(error.message);
-    }
-    finally{
-        incomingMessageDiv.classList.remove("thinking");
-        chatBody.scrollTo({top: chatBody.scrollHeight, behaviour: "smooth"});
-
-    }
+    const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: contents
+    });
+    console.log(response.text);
 }
 
-// Handle outgoing user message
-const handleOutgoingMessage = (e) => {
-    e.preventDefault();
-
-    userData.message = messageInput.value.trim();
-    messageInput.value = ""
-
-        // Create and display user message
-    const messageContent = `<div class="message-text"></div>`;
-    
-    const outgoingMessageDiv = createMessageElement(messageContent, "user-message");
-    outgoingMessageDiv.querySelector(".message-text").textContent = userData.message;
-    chatBody.appendChild(outgoingMessageDiv);
-    chatBody.scrollTo({top: chatBody.scrollHeight, behaviour: "smooth"});
-
-
-    // Simulate bot response with thinking indicator after a delay
-    setTimeout(()=>{
-           // Create and display user message
-    const messageContent = `<div class="message bot-message">
-     <img src="./images/chatbot.png" alt="chatbot-image" width="50px" height="50px" class="bot-avatar">
-    <div class="message-text">
-    <div class="thinking-indicator">
-      <div class="dot">.</div>
-      <div class="dot">.</div>
-      <div class="dot">.</div>
-    </div>
-    </div>
-  </div>`;
-    
-    const incomingMessageDiv = createMessageElement(messageContent, "bot-message", "thinking");
-    chatBody.appendChild(incomingMessageDiv);
-     chatBody.scrollTo({top: chatBody.scrollHeight, behaviour: "smooth"});
-    generateBotResponse(incomingMessageDiv);
-    }, 600)
-}
-
-//Handle enter key press for sending messages
-messageInput.addEventListener("keydown", (e) => {
-
-    const userMessage = e.target.value.trim();
-    if (e.key === "Enter" && userMessage){
-        handleOutgoingMessage(e);
-    }
-})
-  
-sendMessageButton.addEventListener("click", (e) => handleOutgoingMessage(e))
+main();
