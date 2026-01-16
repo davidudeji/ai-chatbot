@@ -3,25 +3,26 @@ require("dotenv").config();
 const fetch = (...args) =>
   import("node-fetch").then(({ default: fetch }) => fetch(...args));
 
-const express = require("express");
-const cors = require("cors");
-const path = require("path");
+// ================================
+// SERVERLESS FUNCTION FOR VERCEL
+// ================================
+export default async function handler(req, res) {
+  // Enable CORS
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-const app = express();
-const PORT = process.env.PORT || 3000;
+  // Handle OPTIONS request
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
 
-// ================================
-// MIDDLEWARE
-// ================================
-app.use(cors());
-app.use(express.json({ limit: "20mb" })); // IMPORTANT for base64 images
-app.use(express.static(path.join(__dirname, "../public")));
+  // Only allow POST requests
+  if (req.method !== "POST") {
+    return res.status(405).json({ reply: "Method not allowed" });
+  }
 
-// ================================
-// CHAT ENDPOINT (MULTI-TURN)
-// ================================
-app.post("/api/chat", async (req, res) => {
-  console.log(" Incoming conversation:");
+  console.log("Incoming conversation:");
 
   try {
     const { contents } = req.body;
@@ -46,13 +47,11 @@ app.post("/api/chat", async (req, res) => {
     }
 
     // --------------------
-    // --------------------
     // Gemini API endpoint
     // --------------------
-    const url =
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
 
-    console.log(" Sending multi-turn request to Gemini...");
+    console.log("Sending multi-turn request to Gemini...");
 
     // --------------------
     // Send FULL conversation
@@ -66,7 +65,7 @@ app.post("/api/chat", async (req, res) => {
     });
 
     const data = await response.json();
-    console.log(" Gemini response:", JSON.stringify(data, null, 2));
+    console.log("Gemini response:", JSON.stringify(data, null, 2));
 
     // --------------------
     // Handle Gemini errors
@@ -82,7 +81,7 @@ app.post("/api/chat", async (req, res) => {
     // --------------------
     const reply =
       data?.candidates?.[0]?.content?.parts?.[0]?.text ||
-      "I couldn’t understand that.";
+      "I couldn't understand that.";
 
     // --------------------
     // Return to frontend
@@ -90,23 +89,9 @@ app.post("/api/chat", async (req, res) => {
     res.json({ reply });
 
   } catch (err) {
-    console.error(" SERVER ERROR:", err);
+    console.error("SERVER ERROR:", err);
     res.status(500).json({
       reply: "Internal server error"
     });
   }
-});
-
-// ================================
-// SERVE STATIC FILES
-// ================================
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../public/index.html"));
-});
-
-// ================================
-// START SERVER
-// ================================
-app.listen(PORT, () => {
-  console.log(` Server running at http://localhost:${PORT}`);
-});
+}
